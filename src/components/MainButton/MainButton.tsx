@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Button as AntdButton, ButtonProps as AntdButtonProps } from 'antd'
 import styled from "styled-components";
 
@@ -43,7 +43,7 @@ const BtnWrapper = styled.div`
   }
 `
 
-const MainButton: FC<MainButtonProps> = (props) => {
+const MainButton: FC<MainButtonProps> = (props: MainButtonProps) => {
   return (
     <BtnWrapper>
       <AntdButton {...props} />

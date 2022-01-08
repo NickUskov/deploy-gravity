@@ -51,7 +51,6 @@ const CssVariables = styled.div`
 
 function App() {
   useEffect(() => {
-    // http://80.87.199.109:8080/get_unfinished_records/
     fetch('http://80.87.199.109:8080/get_unfinished_records/')
       .then(res => res.json())
       .then(data => { console.log(data?.info?.info) })

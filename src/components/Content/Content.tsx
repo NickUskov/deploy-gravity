@@ -379,7 +379,8 @@ const Content: FC<ContentProps> = (props) => {
           <div style={{ display: "flex", justifyContent: "center" }}>
             <MainButton
               onClick={() => setVisibleCloseRecord(false)}
-              style={{ marginRight: 60, width: 150, height: 42 }}>
+              style={{ marginRight: 60, width: 150, height: 42 }}
+            >
               Нет
             </MainButton>
             <MainButton

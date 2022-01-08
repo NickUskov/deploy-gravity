@@ -1,7 +1,8 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import 'antd/dist/antd.css';
+import $api from '../api';
 
 /* assets */
 import backgroundImage from '../assets/images/background.png';
@@ -9,9 +10,7 @@ import logo from '../assets/images/logo.png';
 
 /* components */
 import Button from "../components/Button";
-import { Input } from "../components/Input";
 import { Select } from "../components/Select";
-import {IconBell} from "../components/Icons";
 import {InputPassword} from "../components/InputPassword";
 
 interface LoginPageProps {}
@@ -41,8 +40,18 @@ const FormWrapper = styled.div`
 `
 
 const LoginPage: FC<LoginPageProps> = ({}) => {
+  const [users, setUsers] = useState<any>([]);
 
+  useEffect(() => {
+    $api.get('http://80.87.199.109:8080/get_users')
+      .then((serverResponse) => {
+        setUsers(serverResponse)
+        console.log(serverResponse)
+      })
+  }, []);
 
+  console.log('login page rendered');
+    
     return (
         <PageWrapper>
             <img src={logo} alt="logo.png"/>

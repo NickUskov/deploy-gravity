@@ -1,4 +1,4 @@
-import React, {FC, useMemo, useRef, useState} from 'react';
+import React, {FC, useRef, useState} from 'react';
 import { Select as AntSelect, SelectProps as AntSelectProps } from 'antd';
 import styled from "styled-components";
 
