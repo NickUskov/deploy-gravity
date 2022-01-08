@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { IconLock, IconBell, IconLogOut } from "../Icons";
 import styled from "styled-components";
 import moment from "moment";
+import "moment/dist/locale/ru.js";
 
 interface HeaderProps {
     notifications?: boolean;
@@ -47,7 +48,7 @@ const Header: FC<HeaderProps> = ({ onBellClick, onLogOut, notifications }) => {
         <StyledHeader>
             <span className="header-info">
                 <span>{time}</span>
-                <span>{moment().format('D MMMM')}</span>
+                <span>{moment().locale('ru').format('D MMMM')}</span>
                 <span className="icon-bell-wrapper" onClick={(e) => { onBellClick?.() }}>
                     <IconBell filled={notifications} />
                 </span>
