@@ -11,6 +11,7 @@ import styled from "styled-components";
 /* components */
 import LoginPage from "./pages/LoginPage"
 import PanelLayout from "./pages/PanelLayout";
+import { useEffect } from "react";
 
 const AppWrapper = styled.div`
   display: block;
@@ -49,20 +50,28 @@ const CssVariables = styled.div`
 `
 
 function App() {
+  useEffect(() => {
+    // http://80.87.199.109:8080/get_unfinished_records/
+    fetch('http://80.87.199.109:8080/get_unfinished_records/')
+      .then(res => res.json())
+      .then(data => { console.log(data?.info?.info) })
+    console.log('loaded');
+
+  }, [])
   return (
-      <CssVariables>
-          <AppWrapper>
-              <Switch>
-                  <Route path="/login">
-                      <LoginPage />
-                  </Route>
-                  <Route path="/panel">
-                      <PanelLayout />
-                  </Route>
-                  <Redirect from='/' to='/login'/>
-              </Switch>
-          </AppWrapper>
-      </CssVariables>
+    <CssVariables>
+      <AppWrapper>
+        <Switch>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route path="/panel">
+            <PanelLayout />
+          </Route>
+          <Redirect from='/' to='/login' />
+        </Switch>
+      </AppWrapper>
+    </CssVariables>
   )
 }
 
