@@ -1,9 +1,8 @@
-import React, { FC, useState } from "react";
-import { Modal } from "antd";
+import { FC, useState } from "react";
 import { Header } from "../components/Header";
 import { Content } from "../components/Content";
 import { Nav } from "../components/Nav";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Route, Switch, useRouteMatch, useHistory } from "react-router-dom";
 import { Stats } from "../components/Stats";
 import { NotificationModal } from "../components/NotificationModal";
 import { GeneralModal } from "../components/GeneralModal";
@@ -11,6 +10,8 @@ import { MainButton } from "../components/MainButton";
 
 import styled from "styled-components";
 import { BruttoModal, TaraModal } from "../components/Modals";
+import axios from "axios";
+import endpoints from "../api/constants";
 
 interface PanelLayoutProps {}
 
@@ -38,29 +39,56 @@ const PanelWrapper = styled.div`
   }
 `;
 
+const checkIfLoggedIn = (history: any) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    history.push('login')
+  }
+}
+
 const PanelLayout: FC<PanelLayoutProps> = (props) => {
-  const [logoutVisible, setLogoutVisible] = useState(false);
-  const [visible, setVisible] = useState<boolean>(false);
+  const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [bruttoOpen, setBruttoOpen] = useState(false)
   const [taraOpen, setTaraOpen] = useState(false)
   const [notificationVisible, setNotificationVisible] = useState<boolean>(false);
-  let { path, url } = useRouteMatch();
+  let { path } = useRouteMatch();
+  const history = useHistory();
+
+  checkIfLoggedIn(history)
+
 
   /* handlers */
   const showNotification = () => {
     setNotificationVisible(true);
   };
 
-  const handleLogOut = (visible: boolean) => {
-      setLogoutVisible(visible)
+  const handleOpenLogoutModal = () => {
+    setIsLogoutModalVisible(true)
+  }
+
+  const handleLogoutAction = (confirm: boolean) => {
+    if (!confirm) {
+      setIsLogoutModalVisible(false);
+      return;
+    }
+
+    axios.get(endpoints.logout, {
+      headers: {
+        Authorization: 'bearer ' + localStorage.getItem('token')
+      }
+    })
+    .finally(() => {
+      localStorage.clear();
+      history.push('/login')
+    });
   }
 
   return (
     <PanelWrapper>
       <Header
-          notifications={false}
-          onBellClick={showNotification}
-          onLogOut={() => handleLogOut(true)}
+        notifications={false}
+        onBellClick={showNotification}
+        onLogOut={handleOpenLogoutModal}
       />
 
       <Nav />
@@ -85,19 +113,20 @@ const PanelLayout: FC<PanelLayoutProps> = (props) => {
 
       <GeneralModal
         centered
-        visible={logoutVisible}
+        visible={isLogoutModalVisible}
         footer={
           <div style={{ display: "flex", justifyContent: "center" }}>
             <MainButton
-                onClick={() => handleLogOut(false)}
-                style={{ marginRight: 60, width: 150, height: 42 }}>
+              onClick={() => handleLogoutAction(false)}
+              style={{ marginRight: 60, width: 150, height: 42 }}
+            >
               Нет
             </MainButton>
             <MainButton
-                onClick={(e) => { window.location.href = '/login' } }
-                style={{ width: 150, height: 42 }}
+              onClick={() => handleLogoutAction(true)}
+              style={{ width: 150, height: 42 }}
             >
-                Да
+              Да
             </MainButton>
           </div>
         }

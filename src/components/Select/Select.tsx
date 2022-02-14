@@ -1,6 +1,7 @@
 import React, {FC, useRef, useState} from 'react';
 import { Select as AntSelect, SelectProps as AntSelectProps } from 'antd';
 import styled from "styled-components";
+import { IconSearch } from '../Icons';
 
 const { Option } = AntSelect;
 
@@ -69,7 +70,7 @@ const SelectWrapper = styled.div`
 const Select: FC<SelectProps> & {Option: any} = (props) => {
     const wrapperRef = useRef<any>(null)
     const [isOpen, setIsOpen] = useState<boolean | null>(null)
-    const suffixIcon = isOpen ? (
+    const suffixIcon = props.showSearch ? <IconSearch/> : isOpen ? (
         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" viewBox="0 0 10 7" fill="none">
             <path d="M4.6038 0.514682C4.80395 0.254678 5.19605 0.254679 5.3962 0.514683L9.57646 5.945C9.82956 6.27379 9.59518 6.75 9.18026 6.75L0.819738 6.75C0.404818 6.75 0.170437 6.27379 0.423535 5.945L4.6038 0.514682Z" fill="#F2F2F2"/>
         </svg>

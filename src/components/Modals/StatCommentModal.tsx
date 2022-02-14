@@ -1,12 +1,12 @@
-import React, { FC, useRef } from 'react';
+import { FC, useRef } from 'react';
 import { Modal as AntModal, ModalProps as AntModalProps } from 'antd';
 import styled from "styled-components";
-import { Select } from "../Select";
-import { Input } from "../Input";
 import { TextArea } from '../TextArea';
-import { CheckboxGroup } from "../Checkbox";
 
-interface StatCommentModalProps extends AntModalProps { };
+interface StatCommentModalProps extends AntModalProps {
+  comment: string;
+  onCommentChange: (value: any) => void;
+};
 
 const StatCommentModalWrapper = styled.div`
   .ant-modal-mask {
@@ -47,13 +47,10 @@ const StatCommentModalWrapper = styled.div`
 
 const StatCommentModal: FC<StatCommentModalProps> = (props) => {
   const wrapperRef = useRef<any>(null)
-  const options = [
-    { label: 'Поломка', value: '1' },
-    { label: 'Длинномер', value: '2' },
-  ]
 
-  function onChange(checkedValues: any) {
-    console.log('checked = ', checkedValues);
+  const handleInput = (e: any) => {
+    console.log(e.target.value)
+    props.onCommentChange(e.target.value);
   }
 
   return (
@@ -66,7 +63,12 @@ const StatCommentModal: FC<StatCommentModalProps> = (props) => {
         centered
       >
         <p>Добавить комментарий к записи</p>
-        <TextArea style={{ height: 132 }} defaultValue="Комментарий" />
+        <TextArea
+          style={{ height: 132 }}
+          defaultValue="Комментарий"
+          onInput={handleInput}
+          value={props.comment}
+        />
       </AntModal>
     </StatCommentModalWrapper>
   );

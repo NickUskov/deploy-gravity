@@ -138,7 +138,7 @@ const Road: FC<RoadProps> = (
 
     const handleOpen = (val: string): void => {
         onOpen?.(val)
-        setOpen('allOpened')
+        setOpen(val as typeof open)
     }
 
     const handleClose = (): void => {
@@ -213,7 +213,7 @@ const Road: FC<RoadProps> = (
                     ) }
                 </div>
                 <div className="road-footer-right">
-                    { open === 'allOpened' ? (
+                    { open !== 'allClosed' ? (
                         <MainButton
                             onClick={handleClose}
                             style={{

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from "styled-components";
 
 export interface ButtonProps {
-    onClick?: () => void
+    onClick?: () => void;
 }
 
 const StyledButtonWrapper = styled.div`
@@ -16,6 +16,11 @@ const StyledButtonWrapper = styled.div`
     background: transparent;
     transition: all 0.25s;
     cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed!important;
+      /* pointer-events: none; */
+    }
   }
   
   button:hover {
@@ -23,17 +28,17 @@ const StyledButtonWrapper = styled.div`
     border: 1px solid transparent;
   }
 `
-
 const Button: FC<ButtonProps> = ({ children , ...props }) => {
-    return (
-        <StyledButtonWrapper>
-            <button
-                {...props}
-            >
-                {children}
-            </button>
-        </StyledButtonWrapper>
-    );
+  return (
+    <StyledButtonWrapper>
+      <button
+        {...props}
+        type="submit"
+      >
+        {children}
+      </button>
+    </StyledButtonWrapper>
+  );
 };
 
 export default Button;

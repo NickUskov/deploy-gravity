@@ -1,5 +1,6 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
+import endpoints from "../../api/constants";
 import { GeneralModal } from "../GeneralModal";
 import { MainButton } from "../MainButton";
 import { Road } from "../Road";
@@ -300,6 +301,16 @@ const Content: FC<ContentProps> = (props) => {
   const [mode, setMode] = useState<ModeType>('auto')
   const [visibleCloseRecord, setVisibleCloseRecord] = useState(false)
 
+  useEffect(() => {
+    const source = new EventSource(endpoints.events);
+    source.onopen = () => {
+      console.log('opened')
+    }
+    source.onmessage = (e) => {
+      console.log(e.data)
+    }
+  }, []);
+
   /* handlers */
   const handleModeChange = (modeType: ModeType) => {
     props.onBruttoChange?.(true)
@@ -326,10 +337,9 @@ const Content: FC<ContentProps> = (props) => {
               </div>
             </div>
           </div>
-          <Road
-            onModeChange={handleModeChange}
-          />
-        </div>) : (
+          <Road onModeChange={handleModeChange} />
+        </div>
+      ) : (
         <div className="content">
           <div>
             <div className="table-container">

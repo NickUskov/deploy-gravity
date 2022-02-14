@@ -24,6 +24,7 @@ const CssVariables = styled.div`
   --mainBg: #171717;
   --secondaryBg: #2F2F2F;
   --accentColor: #5076D6;
+  --errorColor: #E55D5D;
   
   
   /* input */
@@ -50,13 +51,6 @@ const CssVariables = styled.div`
 `
 
 function App() {
-  useEffect(() => {
-    fetch('http://80.87.199.109:8080/get_unfinished_records/')
-      .then(res => res.json())
-      .then(data => { console.log(data?.info?.info) })
-    console.log('loaded');
-
-  }, [])
   return (
     <CssVariables>
       <AppWrapper>
