@@ -13,6 +13,11 @@ const endpoints = {
     addComent: `${BASE_URL}add_record_note`,
     editRecord: `${BASE_URL}change_opened_record`,
     events: `${BASE_URL}stream/events`,
+    testEvents: `${BASE_URL}get_test_event`,
+    openInternalGate: `${BASE_URL}open_internal_gate`,
+    closeInternalGate: `${BASE_URL}close_internal_gate`,
+    openExternalGate: `${BASE_URL}open_external_gate`,
+    closeExternalGate: `${BASE_URL}close_external_gate`,
 }
 
 export default endpoints;

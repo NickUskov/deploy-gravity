@@ -1,10 +1,14 @@
-import React, {FC, useState} from 'react';
+import {FC, useState} from 'react';
 import {MainButton} from "../MainButton";
 import {Car} from "../Car";
 import classNames from 'classnames'
 import styled from "styled-components";
 import {SvgRoad} from "./index";
 import {ModeType} from "../Content/Content";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { toggleMode } from '../../redux/slices/modeSlice';
+import { closeLeftGate, closeRightGate, openLeftGate, openRightGate } from '../../redux/slices/roadSlice';
 
 interface RoadProps {
     onModeChange: (mode: ModeType) => void;
@@ -125,32 +129,53 @@ const Road: FC<RoadProps> = (
         carPosition = 'right',
         carDirection= 'toLeft',
     }) => {
-    const [mode, setMode] = useState<'auto'| 'manual'>('auto')
+    const mode = useSelector((state: RootState) => state.mode.value)
+    const gatesState = useSelector((state: RootState) => state.road.value)
+    const dispatch = useDispatch()
+    
     const [open, setOpen] = useState<'left' | 'right' | 'allClosed' | 'allOpened'>('allClosed')
 
     /* handler */
     const handleModeChange = (): void => {
-        setMode(prev => {
-            onModeChange(prev === 'auto' ? 'manual' : 'auto')
-            return prev === 'auto' ? 'manual' : 'auto'
-        })
-    }
-
-    const handleOpen = (val: string): void => {
-        onOpen?.(val)
-        setOpen(val as typeof open)
-    }
-
-    const handleClose = (): void => {
-        setOpen('allClosed')
+        onModeChange(mode === 'auto' ? 'manual' : 'auto')
+        dispatch(toggleMode(mode === 'auto' ? 'manual' : 'auto'))
     }
 
     const leftClasses = classNames( 'left-barrier-active-block', {
-        'opened-left': open === 'left' || open === 'allOpened'
+        'opened-left': gatesState.leftGate
     })
     const rightClasses = classNames('right-barrier-active-block',{
-        'opened-right': open === 'right' || open === 'allOpened'
+        'opened-right': gatesState.rightGate
     })
+
+    const handleChangeRightGate = () => {
+        if (mode === 'manual') {
+            if (gatesState.rightGate) {
+                dispatch(closeRightGate())
+            }
+            if (!gatesState.rightGate) {
+                dispatch(openRightGate())
+            }
+        }
+    }
+
+    const handleChangeLeftGate = () => {
+        if (mode === 'manual') {
+            if (gatesState.leftGate) {
+                dispatch(closeLeftGate())
+            }
+            if (!gatesState.leftGate) {
+                dispatch(openLeftGate())
+            }
+        }
+    }
+
+    const buttonStyles = {
+        padding: "8px 28px",
+        background: "none",
+        height: "unset",
+        borderRadius: 14
+    }
 
     return (
         <RoadWrapper className="road">
@@ -176,68 +201,24 @@ const Road: FC<RoadProps> = (
                 <div className="road-footer-left">
                     <MainButton
                         onClick={handleModeChange}
-                        style={{
-                            padding: "8px 28px",
-                            background: "none",
-                            height: "unset",
-                            borderRadius: 14
-                        }}
+                        style={buttonStyles}
                     >
                         { mode === 'auto' ? 'Ручное управление' : 'Автоматика' }
                     </MainButton>
-                    { open === 'allOpened' ? (
-                        <MainButton
-                            onClick={handleClose}
-                            className="primary-button"
-                            style={{
-                                padding: "8px 28px",
-                                background: "none",
-                                height: "unset",
-                                borderRadius: 14
-                            }}
-                        >
-                            Закрыть
-                        </MainButton>
-                    ) : (
-                        <MainButton
-                            onClick={() => handleOpen('left')}
-                            style={{
-                                padding: "8px 28px",
-                                background: "none",
-                                height: "unset",
-                                borderRadius: 14
-                            }}
-                        >
-                            Открыть
-                        </MainButton>
-                    ) }
+                    <MainButton
+                        onClick={handleChangeLeftGate}
+                        style={buttonStyles}
+                    >
+                        { gatesState.leftGate? 'Закрыть' : 'Открыть' }
+                    </MainButton>
                 </div>
                 <div className="road-footer-right">
-                    { open !== 'allClosed' ? (
-                        <MainButton
-                            onClick={handleClose}
-                            style={{
-                                padding: "8px 28px",
-                                background: "none",
-                                height: "unset",
-                                borderRadius: 14
-                            }}
-                        >
-                            Закрыть
-                        </MainButton>
-                    ) : (
-                        <MainButton
-                            onClick={() => handleOpen('right')}
-                            style={{
-                                padding: "8px 28px",
-                                background: "none",
-                                height: "unset",
-                                borderRadius: 14
-                            }}
-                        >
-                            Открыть
-                        </MainButton>
-                    ) }
+                    <MainButton
+                        onClick={handleChangeRightGate}
+                        style={buttonStyles}
+                    >
+                        { gatesState.rightGate ? 'Закрыть' : 'Открыть' }
+                    </MainButton>
                 </div>
             </div>
         </RoadWrapper>

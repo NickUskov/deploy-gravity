@@ -1,6 +1,9 @@
-import React, { FC, useEffect, useState } from "react";
+import axios from "axios";
+import { FC, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import endpoints from "../../api/constants";
+import { RootState } from "../../redux/store";
 import { GeneralModal } from "../GeneralModal";
 import { MainButton } from "../MainButton";
 import { Road } from "../Road";
@@ -298,8 +301,19 @@ const columns = [
 ];
 
 const Content: FC<ContentProps> = (props) => {
-  const [mode, setMode] = useState<ModeType>('auto')
+  const mode = useSelector((state: RootState) => state.mode.value)
   const [visibleCloseRecord, setVisibleCloseRecord] = useState(false)
+
+  useEffect(() => {
+    setInterval(() => {
+      axios.get(endpoints.testEvents, {
+        params: { event_id: 3 }
+      })
+        .then(data => {
+          console.log(data)
+        })
+    }, 10_000)
+  }, [])
 
   useEffect(() => {
     const source = new EventSource(endpoints.events);
@@ -307,14 +321,13 @@ const Content: FC<ContentProps> = (props) => {
       console.log('opened')
     }
     source.onmessage = (e) => {
-      console.log(e.data)
+      console.log(e.data, 'from event')
     }
   }, []);
 
   /* handlers */
   const handleModeChange = (modeType: ModeType) => {
     props.onBruttoChange?.(true)
-    setMode(modeType)
   }
 
   const onOpen = (val: string) => {

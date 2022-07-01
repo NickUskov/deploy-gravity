@@ -12,6 +12,7 @@ import styled from "styled-components";
 import { BruttoModal, TaraModal } from "../components/Modals";
 import axios from "axios";
 import endpoints from "../api/constants";
+import { SSEProvider } from "react-hooks-sse";
 
 interface PanelLayoutProps {}
 
@@ -95,11 +96,14 @@ const PanelLayout: FC<PanelLayoutProps> = (props) => {
 
       <Switch>
         <Route exact path={path}>
-          <Content  onBruttoChange={(data) => {
-              data === 'right' && setBruttoOpen(true)
-              data === 'left' && setTaraOpen(true)
-          }}
-          />
+          <SSEProvider endpoint={endpoints.events}>
+            <Content 
+              onBruttoChange={(data) => {
+                data === 'right' && setBruttoOpen(true)
+                data === 'left' && setTaraOpen(true)
+              }}
+            />
+          </SSEProvider>
         </Route>
         <Route path={`${path}/stats`}>
           <Stats />
